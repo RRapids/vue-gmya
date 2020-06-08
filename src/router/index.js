@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Card from '../views/Card.vue'
 import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
@@ -17,18 +16,7 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home,
-    children: [
-      {
-        path: '/',
-        redirect: 'card'
-      },
-      {
-        path: 'card',
-        name: 'Card',
-        component: Card
-      }
-    ]
+    component: Home
   },
   {
     name: '404',
