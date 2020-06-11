@@ -56,7 +56,7 @@
       <button class="change-btn" @click="changeLabel()">换一批</button>
     </div>
     <!-- 按钮 -->
-    <button class="label-btn">留言管理</button>
+    <button class="label-btn" @click="gomanage">留言管理</button>
   </div>
 </template>
 
@@ -128,6 +128,9 @@ export default {
     },
     goLogin() {
       this.$router.push('/login')
+    },
+    gomanage() {
+      this.$router.push('/manage')
     }
   },
   computed: {},

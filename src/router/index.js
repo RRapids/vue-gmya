@@ -2,17 +2,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import LabelMange from '../views/labelManage.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
     redirect: 'home'
-  },
-  {
-    path: '/welcome',
-    name: 'Welcome',
-    component: () => import('@/views/Welcome.vue')
   },
   {
     path: '/home',
@@ -23,6 +20,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/manage',
+    name: 'LabelManage',
+    component: LabelMange
   },
   {
     name: '404',
