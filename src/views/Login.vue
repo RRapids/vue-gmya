@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content">
-      <form action="" method="post">
+      <form action="../views/Login.vue">
         <!-- 账号 -->
         <input type="text" placeholder="账号" />
 
@@ -10,6 +10,7 @@
 
         <!-- 提交 -->
         <input type="submit" value="登录" class="btn" />
+        <!-- <button type="submit" class="btn">登录</button> -->
       </form>
       <div class="otherLogin">
         <button class="other-btn">其他登录</button>

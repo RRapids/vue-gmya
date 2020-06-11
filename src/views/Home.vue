@@ -2,7 +2,7 @@
   <div class="container">
     <!-- 顶部条 -->
     <div class="t-top">
-      <img class="topicon homeicon" src="../asset/home.png" />
+      <img class="topicon homeicon" src="../asset/home.png" @click="goLogin" />
       <p>你对{{ user.name }}有什么话要说？</p>
     </div>
     <!-- 第二部分 -->
@@ -125,6 +125,9 @@ export default {
       if (this.labelStart >= this.labels.length) {
         ;(this.labelStart = 0), (this.labelEnd = 4)
       }
+    },
+    goLogin() {
+      this.$router.push('/login')
     }
   },
   computed: {},
