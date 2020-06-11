@@ -24,23 +24,36 @@
     <div class="center-container">
       <img :src="user.avatar" class="avatar" />
     </div>
+    <!-- 弹幕 -->
+    <div class="block" :hidden="flag">
+      <input class="danmu-input" type="text" :value="danmu" />
+    </div>
     <!-- 下部内容 -->
     <div class="under-content">
       <!-- 留言发送 -->
       <div class="label-send">
         <input
+          id="label-input"
           class="label-input"
           type="text"
           placeholder="#说说我们之间的故事"
           :value="inputValue"
         />
 
-        <button class="sendbtn">发送</button>
+        <button class="sendbtn" @click="send">发送</button>
       </div>
       <!-- 留言标签 -->
-      <div class="label-collection" v-for="item in labels" :key="item.id">
-        <label class="title-xu" @click="click(item)">{{ item.message }}</label>
+      <div class="label-content">
+        <div
+          class="label-collection"
+          v-for="item in labels.slice(labelStart, labelEnd)"
+          :key="item.id"
+        >
+          <label class="title-xu" @click="click(item)">{{ item.message }}</label>
+        </div>
       </div>
+
+      <button class="change-btn" @click="changeLabel()">换一批</button>
     </div>
     <!-- 按钮 -->
     <button class="label-btn">留言管理</button>
@@ -63,11 +76,21 @@ export default {
         { id: 1, message: '你真的超有正义感' },
         { id: 2, message: '老实说你的脾气太暴躁' },
         { id: 3, message: '晚上能早点睡觉么' },
-        { id: 4, message: '我喜欢你' }
-      ]
+        { id: 4, message: '我喜欢你' },
+        { id: 5, message: '请收下我的膝盖！我超级崇拜你！' },
+        { id: 6, message: '别堕落了快来学习！' },
+        { id: 7, message: '你挺自大的' },
+        { id: 8, message: '我摔倒了要你亲亲 才能起来' },
+        { id: 9, message: '祝愿你每天开开心心我的朋友' }
+      ],
+      labelStart: 0,
+      labelEnd: 4,
+      danmu: '',
+      flag: true
     }
   },
   methods: {
+    // 音乐暂停
     stop() {
       this.isPlay = !this.isPlay
       var bgaudio = document.getElementById('bgaudio')
@@ -79,8 +102,25 @@ export default {
         bgaudio.currentTime = 0
       }
     },
+    //点击标签
     click(item) {
       console.log(item.id), console.log(item.message), (this.inputValue = item.message)
+    },
+    //发送弹幕
+    send() {
+      this.flag = false
+      this.inputValue = document.getElementById('label-input').value
+      this.danmu = this.inputValue
+      this.inputValue = ''
+    },
+    // 换一批
+    changeLabel() {
+      console.log('s' + this.labelStart + 'e' + this.labelEnd),
+        (this.labelStart += 4),
+        (this.labelEnd += 3)
+      if (this.labelStart >= this.labels.length) {
+        ;(this.labelStart = 0), (this.labelEnd = 4)
+      }
     }
   },
   computed: {},
@@ -91,6 +131,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
+// 弹幕
+.block {
+  margin-top: 10px;
+  position: absolute;
+  animation: barrage 5s linear infinite;
+}
+
+@keyframes barrage {
+  from {
+    left: 83%;
+    transform: translateX(0);
+  }
+  to {
+    left: 0%;
+    transform: translateX(-100%);
+  }
+}
 .container {
   position: absolute;
   background-image: url('../asset/bg.jpeg');
@@ -146,6 +203,7 @@ export default {
   align-items: center;
   margin-top: 30%;
 }
+
 .avatar {
   width: 100px;
   height: 100px;
@@ -154,9 +212,10 @@ export default {
 
 .under-content {
   display: flex;
-  margin: 60% 1% 2% 10%;
+  margin: 50% 1% 2% 10%;
   width: 90%;
   flex-wrap: wrap;
+  z-index: 99;
 }
 
 .label-input {
@@ -193,6 +252,7 @@ export default {
   padding: 5px;
   border-radius: 5px;
   margin-left: 5px;
+  height: 20px;
 }
 .label-btn {
   width: 78%;
@@ -203,5 +263,32 @@ export default {
   outline: none;
   border: 1px solid #fff;
   color: #ffffff;
+}
+.danmu-input {
+  display: flex;
+  padding: 5px;
+  border: none;
+  background-color: #00c7ff;
+  outline: none;
+  color: #ffffff;
+  border-radius: 30px;
+  text-align: center;
+  z-index: 1;
+}
+.change-btn {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  height: 20px;
+  color: #ffffff;
+  font-size: 13px;
+  margin-top: 100px;
+  margin-left: 270px;
+}
+.label-content {
+  display: flex;
+  flex-wrap: wrap;
+  height: 90px;
 }
 </style>
