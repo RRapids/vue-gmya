@@ -70,8 +70,8 @@ export default {
         avatar: require('../asset/bg_weidenglu.png')
       },
       title: '你好，倾诉者',
-      isPlay: true,
-      inputValue: '',
+      isPlay: true, //音乐播放
+      inputValue: '', //输入框文字
       labels: [
         { id: 1, message: '你真的超有正义感' },
         { id: 2, message: '老实说你的脾气太暴躁' },
@@ -83,10 +83,10 @@ export default {
         { id: 8, message: '我摔倒了要你亲亲 才能起来' },
         { id: 9, message: '祝愿你每天开开心心我的朋友' }
       ],
-      labelStart: 0,
-      labelEnd: 4,
-      danmu: '',
-      flag: true
+      labelStart: 0, //留言标签开始位置
+      labelEnd: 4, //留言标签最后一个
+      danmu: [], //弹幕
+      flag: true //弹幕隐藏
     }
   },
   methods: {
@@ -108,9 +108,13 @@ export default {
     },
     //发送弹幕
     send() {
+      // 弹幕不隐藏
       this.flag = false
+      //获取输入文字
       this.inputValue = document.getElementById('label-input').value
+      //弹幕
       this.danmu = this.inputValue
+      //清空输入框
       this.inputValue = ''
     },
     // 换一批
@@ -215,7 +219,6 @@ export default {
   margin: 50% 1% 2% 10%;
   width: 90%;
   flex-wrap: wrap;
-  z-index: 99;
 }
 
 .label-input {
@@ -226,9 +229,10 @@ export default {
   background-color: transparent;
   width: 250px;
   outline: none;
-  font-size: 16px;
-  color: #8ca2aa;
+  vertical-align: middle; //表单控件上下居中对齐,解决输入文字时，下边框微微移动问题
+  color: #757575;
 }
+
 .sendbtn {
   background-color: #00c7ff;
   border: none;
@@ -240,11 +244,13 @@ export default {
   color: #ffffff;
   font-size: 14px;
 }
+
 .label-collection {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
 }
+
 // 边框虚线
 .title-xu {
   color: #ffffff;
