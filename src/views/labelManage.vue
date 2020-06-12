@@ -13,7 +13,7 @@
       <!-- 有评论时 -->
       <div v-else class="detail">
         <img :src="item.useravatar" class="icon" @click="lookdetail(item)" />
-        <img src="../asset/delete.png" class="icon" />
+        <img src="../asset/delete.png" class="icon" @click="deletealert(item.id)" />
         <input
           id="label-input"
           class="label-input"
@@ -33,7 +33,16 @@
           <p>{{ detail.createTime }}</p>
         </div>
       </div>
-      <button class="confirmbtn" @click="closedetail">我知道了</button>
+      <button class="confirmbtn" @click="closealert">我知道了</button>
+    </div>
+    <!-- 删除警示框 -->
+    <div class="userdetail" v-show="deleteflag">
+      <p style="font-weight:600">警告</p>
+      <p style="font-size:14px;color:#8E8E93;">删除评论无法恢复，确认删除吗？</p>
+      <div class="selectarea">
+        <button class="d-btn" @click="closealert">取消</button>
+        <button class="d-btn" style="color:#FF2525" @click="deletelabel">确认</button>
+      </div>
     </div>
     <!-- 客服icon -->
     <img src="../asset/kefu.png" class="kefu" />
@@ -61,8 +70,10 @@ export default {
           createTime: '2020.06.06 11；14'
         }
       ],
-      flag: false, //弹窗
-      detail: []
+      flag: false, //留言详情弹窗
+      deleteflag: false, //删除警示框
+      detail: [], //详情信息，数据传递
+      deleteID: '' //删除id
     }
   },
   components: {},
@@ -73,15 +84,24 @@ export default {
       //返回上一个页面
       this.$router.go(-1)
     },
-    // 查看评论人
+    // 留言详情
     lookdetail(item) {
-      // console.log('clikc')
       this.flag = true
       this.detail = item
     },
+    // 删除警示框
+    deletealert(e) {
+      this.deleteflag = !this.deleteflag
+      this.deleteID = e
+    },
     // 关闭弹窗
-    closedetail() {
-      this.flag = false
+    closealert() {
+      ;(this.flag = false), (this.deleteflag = false)
+    },
+    // 删除留言
+    deletelabel() {
+      console.log(this.deleteID)
+      ;(this.deleteflag = false), this.userlabels.splice(this.deleteID - 1, 1)
     }
   },
   computed: {}
@@ -199,5 +219,21 @@ export default {
   border: none;
   outline: none;
   background-color: transparent;
+}
+.selectarea {
+  margin-top: 20px;
+  margin-bottom: 0px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 60px;
+  border-top: 1px solid #eeeeee;
+}
+.d-btn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-weight: bold;
 }
 </style>

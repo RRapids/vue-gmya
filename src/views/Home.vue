@@ -12,8 +12,9 @@
         id="bgaudio"
         src="../asset/audio/MySoul.mp3"
         autoplay="autoplay"
+        controls="controls"
         loop="loop"
-        hidden
+        hidden="hidden"
       ></audio>
       <div>
         {{ title }}
@@ -52,7 +53,6 @@
           <label class="title-xu" @click="click(item)">{{ item.message }}</label>
         </div>
       </div>
-
       <button class="change-btn" @click="changeLabel()">换一批</button>
     </div>
     <!-- 按钮 -->
@@ -99,7 +99,7 @@ export default {
         bgaudio.play()
       } else {
         bgaudio.pause()
-        bgaudio.currentTime = 0
+        // bgaudio.currentTime = 0
       }
     },
     //点击标签
