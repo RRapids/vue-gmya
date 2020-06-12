@@ -12,7 +12,7 @@
       </div>
       <!-- 有评论时 -->
       <div v-else class="detail">
-        <img :src="item.useravatar" class=" icon" />
+        <img :src="item.useravatar" class="icon" @click="lookdetail(item)" />
         <img src="../asset/delete.png" class="icon" />
         <input
           id="label-input"
@@ -24,16 +24,18 @@
       </div>
     </div>
     <!-- 人员详情 -->
-    <div class="userdetail" v-show="true">
+    <div class="userdetail" v-show="flag">
       <p class="p2">评论人</p>
       <div class="usercontent">
-        <img src="../asset/bg_weidenglu.png" class="usericon" />
+        <img :src="detail.useravatar" class="usericon" />
         <div class="name-time">
-          <p>腾飞</p>
-          <p>2020.06.06 11:14</p>
+          <p>{{ detail.username }}</p>
+          <p>{{ detail.createTime }}</p>
         </div>
       </div>
+      <button class="confirmbtn" @click="closedetail">我知道了</button>
     </div>
+    <!-- 客服icon -->
     <img src="../asset/kefu.png" class="kefu" />
   </div>
 </template>
@@ -53,12 +55,14 @@ export default {
         },
         {
           id: '2',
-          username: 'Tom',
+          username: 'Keyreu',
           useravatar: require('../asset/user2.png'),
           labelContent: '你真的超有正义感',
           createTime: '2020.06.06 11；14'
         }
-      ]
+      ],
+      flag: false, //弹窗
+      detail: []
     }
   },
   components: {},
@@ -68,6 +72,16 @@ export default {
     returnHome() {
       //返回上一个页面
       this.$router.go(-1)
+    },
+    // 查看评论人
+    lookdetail(item) {
+      // console.log('clikc')
+      this.flag = true
+      this.detail = item
+    },
+    // 关闭弹窗
+    closedetail() {
+      this.flag = false
     }
   },
   computed: {}
@@ -135,10 +149,11 @@ export default {
   vertical-align: middle; //表单控件上下居中对齐,解决输入文字时，下边框微微移动问题
 }
 .kefu {
+  position: absolute;
   width: 50px;
   height: 50px;
-  margin-top: 50%;
-  margin-left: 70%;
+  margin-top: 80%;
+  margin-left: 20%;
   z-index: 1;
   border-radius: 50%;
 }
@@ -150,14 +165,16 @@ export default {
   margin-top: 20%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
   border: 1px solid #eeeeee;
+  border-radius: 5px;
 }
 .usercontent {
   display: flex;
-  height: 40px;
-  background-color: #eeeeee;
+  height: 60px;
   text-align: left;
   align-items: center;
+  justify-content: center;
   margin: 1px 10px 1px 10px;
+  border-bottom: 1.5px solid #eeeeee;
 }
 .usericon {
   width: 30px;
@@ -166,15 +183,21 @@ export default {
   border-radius: 50%;
 }
 .name-time {
-  display: flex;
-  height: 30px;
-  flex-direction: column;
-  justify-content: center;
+  margin-left: 1px;
   font-size: 10px;
 }
 .p2 {
   text-align: left;
   font-size: 12px;
   margin-left: 10px;
+  font-weight: bold;
+}
+.confirmbtn {
+  color: #ff2525;
+  font-size: 18px;
+  margin-top: 6px;
+  border: none;
+  outline: none;
+  background-color: transparent;
 }
 </style>
