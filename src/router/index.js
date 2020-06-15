@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/userside/Home.vue'
 import Login from '../views/Login.vue'
-import LabelMange from '../views/labelManage.vue'
+import LabelMange from '../views/userside/labelManage.vue'
 import Doom from '../views/doom.vue'
-import ChartRoom from '../views/chatroom.vue'
+import ChartRoom from '../views/userside/chatroom.vue'
 
 Vue.use(VueRouter)
 

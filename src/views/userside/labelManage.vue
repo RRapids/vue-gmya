@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <img class="icon lefticon" src="../asset/left.png" @click="returnHome" />
+      <img class="icon lefticon" src="../../asset/left.png" @click="returnHome" />
       <p>倾诉留言卡</p>
     </div>
     <div class="container" v-for="(item, index) in userlabels" :key="index">
@@ -13,7 +13,7 @@
       <!-- 有评论时 -->
       <div v-else class="detail">
         <img :src="item.useravatar" class="icon" @click="lookdetail(item)" />
-        <img src="../asset/delete.png" class="icon" @click="deletealert(index)" />
+        <img src="../../asset/delete.png" class="icon" @click="deletealert(index)" />
         <input
           id="label-input"
           class="label-input"
@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- 客服icon -->
-    <img src="../asset/kefu.png" class="kefu" @click="chartRoom" />
+    <img src="../../asset/kefu.png" class="kefu" @click="chartRoom" />
   </div>
 </template>
 
@@ -58,14 +58,14 @@ export default {
         {
           id: '1',
           username: 'Tom',
-          useravatar: require('../asset/user2.png'),
+          useravatar: require('../../asset/user2.png'),
           labelContent: '你真的超有正义感',
           createTime: '2020.06.06 11；14'
         },
         {
           id: '2',
           username: 'Keyreu',
-          useravatar: require('../asset/user2.png'),
+          useravatar: require('../../asset/user2.png'),
           labelContent: '老实说你的脾气太暴躁',
           createTime: '2020.06.06 11；14'
         }

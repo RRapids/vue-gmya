@@ -2,15 +2,15 @@
   <div class="container">
     <!-- 顶部条 -->
     <div class="t-top">
-      <img class="topicon homeicon" src="../asset/home.png" @click="goLogin" />
+      <img class="topicon homeicon" src="../../asset/home.png" @click="goLogin" />
       <p>你对{{ user.name }}有什么话要说？</p>
     </div>
     <!-- 第二部分 -->
     <div class="top">
-      <img :class="{ play: isPlay, topicon: true }" src="../asset/yingyue.png" @click="stop" />
+      <img :class="{ play: isPlay, topicon: true }" src="../../asset/yingyue.png" @click="stop" />
       <audio
         id="bgaudio"
-        src="../asset/audio/MySoul.mp3"
+        src="../../asset/audio/MySoul.mp3"
         autoplay="autoplay"
         controls="controls"
         loop="loop"
@@ -19,7 +19,7 @@
       <div>
         {{ title }}
       </div>
-      <img class="topicon" src="../asset/fengxiang.png" />
+      <img class="topicon" src="../../asset/fengxiang.png" />
     </div>
     <!-- 中间头像 -->
     <div class="center-container">
@@ -68,7 +68,7 @@ export default {
     return {
       user: {
         name: 'Tom',
-        avatar: require('../asset/bg_weidenglu.png')
+        avatar: require('../../asset/bg_weidenglu.png')
       },
       title: '你好，倾诉者',
       isPlay: true, //音乐播放
@@ -161,7 +161,7 @@ export default {
 }
 .container {
   position: absolute;
-  background-image: url('../asset/bg.jpeg');
+  background-image: url('../../asset/bg.jpeg');
   width: 100%;
   height: 100%;
   z-index: -1;

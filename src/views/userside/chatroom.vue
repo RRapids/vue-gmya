@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <img class="icon lefticon" src="../asset/left-b.png" @click="returnLabel" />
+      <img class="icon lefticon" src="../../asset/left-b.png" @click="returnLabel" />
       <p style="font-weight:600">客服</p>
     </div>
     <!-- 主体内容 -->
@@ -53,7 +53,7 @@ export default {
       userInfo: {
         userId: 1,
         userName: 'Tom',
-        userImg: require('../asset/user2.png')
+        userImg: require('../../asset/user2.png')
       },
       // 输入框内容
       inputValue: '',
@@ -66,7 +66,7 @@ export default {
           kefuInfo: {
             kefuId: 1,
             kefuName: 'kufu',
-            kefuImg: require('../asset/user.png')
+            kefuImg: require('../../asset/user.png')
           }
         },
         {
@@ -75,7 +75,7 @@ export default {
           userInfo: {
             userId: 1,
             userName: 'Tom',
-            userImg: require('../asset/user2.png')
+            userImg: require('../../asset/user2.png')
           }
         }
       ],
