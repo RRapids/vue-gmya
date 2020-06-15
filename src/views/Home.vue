@@ -150,12 +150,12 @@ export default {
 
 @keyframes barrage {
   from {
-    left: 83%;
-    transform: translateX(0);
+    left: 100%;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    left: 0%;
-    transform: translateX(-100%);
+    left: 0;
+    transform: translate3d(-100%, 0, 0);
   }
 }
 .container {
@@ -286,6 +286,9 @@ export default {
   border-radius: 30px;
   text-align: center;
   z-index: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .change-btn {
   position: absolute;

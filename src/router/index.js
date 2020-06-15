@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import LabelMange from '../views/labelManage.vue'
+import Doom from '../views/doom.vue'
+import ChartRoom from '../views/chatroom.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +27,16 @@ const routes = [
     path: '/manage',
     name: 'LabelManage',
     component: LabelMange
+  },
+  {
+    path: '/doom',
+    name: 'Doom',
+    component: Doom
+  },
+  {
+    path: '/chartRoom',
+    name: 'ChartRoom',
+    component: ChartRoom
   },
   {
     name: '404',

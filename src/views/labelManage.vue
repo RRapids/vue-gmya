@@ -4,7 +4,7 @@
       <img class="icon lefticon" src="../asset/left.png" @click="returnHome" />
       <p>倾诉留言卡</p>
     </div>
-    <div class="container" v-for="item in userlabels" :key="item.id">
+    <div class="container" v-for="(item, index) in userlabels" :key="index">
       <!-- 没有评论时 -->
       <div class="nonelabel" v-if="(item.length = null)">
         <p class="p1">暂时没有人评论</p>
@@ -13,7 +13,7 @@
       <!-- 有评论时 -->
       <div v-else class="detail">
         <img :src="item.useravatar" class="icon" @click="lookdetail(item)" />
-        <img src="../asset/delete.png" class="icon" @click="deletealert(item.id)" />
+        <img src="../asset/delete.png" class="icon" @click="deletealert(index)" />
         <input
           id="label-input"
           class="label-input"
@@ -23,7 +23,7 @@
         />
       </div>
     </div>
-    <!-- 人员详情 -->
+    <!-- 留言者详情框 -->
     <div class="userdetail" v-show="flag">
       <p class="p2">评论人</p>
       <div class="usercontent">
@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- 客服icon -->
-    <img src="../asset/kefu.png" class="kefu" />
+    <img src="../asset/kefu.png" class="kefu" @click="chartRoom" />
   </div>
 </template>
 
@@ -66,14 +66,14 @@ export default {
           id: '2',
           username: 'Keyreu',
           useravatar: require('../asset/user2.png'),
-          labelContent: '你真的超有正义感',
+          labelContent: '老实说你的脾气太暴躁',
           createTime: '2020.06.06 11；14'
         }
       ],
       flag: false, //留言详情弹窗
       deleteflag: false, //删除警示框
       detail: [], //详情信息，数据传递
-      deleteID: '' //删除id
+      deleteID: 0 //删除id
     }
   },
   components: {},
@@ -101,7 +101,11 @@ export default {
     // 删除留言
     deletelabel() {
       console.log(this.deleteID)
-      ;(this.deleteflag = false), this.userlabels.splice(this.deleteID - 1, 1)
+      ;(this.deleteflag = false), this.userlabels.splice(this.deleteID, 1)
+    },
+    // 聊天室
+    chartRoom() {
+      this.$router.push('/chartRoom')
     }
   },
   computed: {}
@@ -172,7 +176,7 @@ export default {
   position: absolute;
   width: 50px;
   height: 50px;
-  margin-top: 80%;
+  margin-top: 100%;
   margin-left: 20%;
   z-index: 1;
   border-radius: 50%;
