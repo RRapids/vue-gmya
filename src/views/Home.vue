@@ -39,6 +39,7 @@
           type="text"
           placeholder="#说说我们之间的故事"
           :value="inputValue"
+          @keyup.enter="send"
         />
 
         <button class="sendbtn" @click="send">发送</button>

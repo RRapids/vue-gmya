@@ -35,7 +35,7 @@
     <!-- 输入区 -->
     <div class="footer">
       <div>
-        <input type="text" class="inputarea" v-model="inputValue" />
+        <input type="text" class="inputarea" v-model="inputValue" @keyup.enter="sendEvent" />
         <button class="sendbtn" @click="sendEvent">发送</button>
       </div>
     </div>
