@@ -4,6 +4,6 @@ module.exports = {
     port: 8000,
     https: false,
     open: true,
-    hotOnly: true
-  }
+    hotOnly: true,
+  },
 }

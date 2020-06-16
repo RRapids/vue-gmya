@@ -1,0 +1,224 @@
+<template>
+  <div>
+    <div class="top">
+      <img class="icon lefticon" src="../../asset/left-b.png" @click="returnLabel" />
+      <p style="font-weight:600">{{ userInfo.userName }}</p>
+    </div>
+    <!-- 主体内容 -->
+    <div class="chartContent" ref="scroll">
+      <!-- 时间 -->
+      <div class="timearea">
+        {{ localTime }}
+      </div>
+      <div v-for="(item, index) in messageList" :key="index">
+        <!-- 左侧 -->
+        <div class="left" v-if="item.type === 1">
+          <img :src="userInfo.userImg" class="usericon" />
+          <div class="mssageInput">
+            <span>{{ item.message }}</span>
+          </div>
+        </div>
+        <br />
+        <!-- 右侧 -->
+        <div class="right" v-if="item.type === 2">
+          <div class="mssageInput">
+            <span>{{ item.message }}</span>
+          </div>
+          <img :src="item.kefuInfo.kefuImg" class="usericon" />
+        </div>
+        <br />
+        <br />
+      </div>
+    </div>
+    <!-- 输入区 -->
+    <div class="footer">
+      <div>
+        <input type="text" class="inputarea" v-model="inputValue" @keyup.enter="sendEvent" />
+        <button class="sendbtn" @click="sendEvent">发送</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'chartRoom',
+  data() {
+    return {
+      // 当前时间
+      localTime: '',
+      // 用户信息
+      userInfo: [],
+      // 输入框内容
+      inputValue: '',
+      // 消息列表
+      messageList: [
+        // type = 1 对方内容     type = 2 我发送内容
+        {
+          type: 1,
+          message: '我有一个问题',
+          userInfo: {}
+        },
+        {
+          type: 2,
+          message: '你好！',
+          kefuInfo: {
+            kefuId: 1,
+            kefuName: 'kufu',
+            kefuImg: require('../../asset/user.png')
+          }
+        }
+      ],
+      // 连接状态
+      connectState: true //模拟连接
+    }
+  },
+  methods: {
+    // 返回上个页面
+    returnLabel() {
+      this.$router.go(-1)
+    },
+    // 滚动
+    scroll() {
+      this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight
+    },
+    // 连接服务事件
+    connectEvent() {},
+    // 发送信息
+    sendEvent() {
+      this.inputValue = this.trim(this.inputValue)
+      console.log(this.inputValue)
+      if (this.inputValue.length > 0) {
+        if (this.connectState) {
+          this.messageList.push({
+            type: 2,
+            message: this.inputValue,
+            userInfo: this.userInfo
+          })
+        }
+        this.inputValue = ''
+      }
+    },
+    trim(s) {
+      return s.replace(/(^\s*)|(\s*$)/g, '')
+    }
+  },
+  computed: {},
+  components: {},
+  created() {
+    var timestamp = new Date().getTime() //获取当前毫秒时间戳
+    var nowdate = new Date(timestamp) / 1000 //把当前日期变成时间戳
+    this.localTime = new Date(parseInt(nowdate) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ') //把时间戳转换日期格式
+    // 获取传来的值
+    const userData = JSON.parse(sessionStorage.getItem('userstorage'))
+    this.userInfo = userData.userInfo.customInfo
+    console.log(this.userInfo.userName)
+  },
+  mounted() {
+    this.connectEvent()
+  },
+  updated() {
+    this.scroll()
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.top {
+  display: flex;
+  height: 40px;
+  font-size: 14px;
+  align-items: center;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+}
+.icon {
+  width: 25px;
+  height: 25px;
+}
+.lefticon {
+  margin-left: 7%;
+  margin-right: 30%;
+}
+.usericon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 5px 5px 5px 5px;
+}
+.chartContent {
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  bottom: 50px;
+  display: block;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  align-items: center;
+  .timearea {
+    height: 20px;
+    font-size: 10px;
+    color: #8e8e93;
+    padding: 10px;
+  }
+  .left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    height: 40px;
+    margin-bottom: 20px;
+  }
+  .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+    margin-left: 10px;
+    height: 40px;
+    // background-color: #7ee697;
+    margin-bottom: 20px;
+  }
+  .mssageInput {
+    display: inline-block;
+    padding: 8px;
+    border: none;
+    background-color: #8dfa69;
+    outline: none;
+    min-width: 10px;
+    max-width: 150px;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+}
+.footer {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  background-color: #fbfbfb;
+  margin-top: 565px;
+  align-items: center;
+  justify-content: space-around;
+  .inputarea {
+    background-color: #ffffff;
+    width: 260px;
+    height: 25px;
+    outline: none;
+    border: 1px solid #bfbfbf;
+    border-radius: 20px;
+  }
+  .sendbtn {
+    padding: 5px;
+    color: #ffffff;
+    width: 60px;
+    font-size: 10px;
+    height: 25px;
+    background-color: #7ee697;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    margin-left: 10px;
+  }
+}
+</style>
