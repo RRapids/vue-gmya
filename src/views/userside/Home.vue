@@ -51,7 +51,7 @@
           v-for="item in labels.slice(labelStart, labelEnd)"
           :key="item.id"
         >
-          <label class="title-xu" @click="click(item)">{{ item.message }}</label>
+          <label class="title-xu" @click="click(item)">{{ item.labelContent }}</label>
         </div>
       </div>
       <button class="change-btn" @click="changeLabel()">换一批</button>
@@ -73,17 +73,7 @@ export default {
       title: '你好，倾诉者',
       isPlay: true, //音乐播放
       inputValue: '', //输入框文字
-      labels: [
-        { id: 1, message: '你真的超有正义感' },
-        { id: 2, message: '老实说你的脾气太暴躁' },
-        { id: 3, message: '晚上能早点睡觉么' },
-        { id: 4, message: '我喜欢你' },
-        { id: 5, message: '请收下我的膝盖！我超级崇拜你！' },
-        { id: 6, message: '别堕落了快来学习！' },
-        { id: 7, message: '你挺自大的' },
-        { id: 8, message: '我摔倒了要你亲亲 才能起来' },
-        { id: 9, message: '祝愿你每天开开心心我的朋友' }
-      ],
+      labels: [],
       labelStart: 0, //留言标签开始位置
       labelEnd: 4, //留言标签最后一个
       danmu: [], //弹幕
@@ -105,7 +95,7 @@ export default {
     },
     //点击标签
     click(item) {
-      console.log(item.id), console.log(item.message), (this.inputValue = item.message)
+      console.log(item.id), console.log(item.labelContent), (this.inputValue = item.labelContent)
     },
     //发送弹幕
     send() {
@@ -136,7 +126,15 @@ export default {
   },
   computed: {},
   components: {},
-  created() {},
+  created() {
+    // 留言标签
+    this.axios({
+      url: this.GLOBAL.baseUrl + '/tLabel/selectLabel'
+    }).then((res) => {
+      console.log(res.data.data)
+      this.labels = res.data.data
+    })
+  },
   mounted() {}
 }
 </script>
