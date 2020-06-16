@@ -28,6 +28,7 @@
         </div>
         <br />
         <br />
+        <br />
       </div>
     </div>
     <!-- 输入区 -->
@@ -93,7 +94,11 @@ export default {
           this.messageList.push({
             type: 2,
             message: this.inputValue,
-            userInfo: this.userInfo
+            kefuInfo: {
+              kefuId: 1,
+              kefuName: 'kufu',
+              kefuImg: require('../../asset/user.png')
+            }
           })
         }
         this.inputValue = ''
