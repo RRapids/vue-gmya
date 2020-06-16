@@ -6,7 +6,7 @@
     </div>
     <div class="container" v-for="(item, index) in userlabels" :key="index">
       <!-- 没有评论时 -->
-      <div class="nonelabel" v-if="(item.length = null)">
+      <div class="nonelabel" v-if="item.length === null">
         <p class="p1">暂时没有人评论</p>
         <button class="btn">邀请好友评论</button>
       </div>
@@ -19,7 +19,7 @@
           class="label-input"
           type="text"
           readonly="readonly"
-          :value="item.labelContent"
+          :value="item.content"
         />
       </div>
     </div>
@@ -30,7 +30,7 @@
         <img :src="detail.useravatar" class="usericon" />
         <div class="name-time">
           <p>{{ detail.username }}</p>
-          <p>{{ detail.createTime }}</p>
+          <p>{{ detail.gmtCreate.replace('T', ' ') }}</p>
         </div>
       </div>
       <button class="confirmbtn" @click="closealert">我知道了</button>
@@ -55,20 +55,20 @@ export default {
   data() {
     return {
       userlabels: [
-        {
-          id: '1',
-          username: 'Tom',
-          useravatar: require('../../asset/user2.png'),
-          labelContent: '你真的超有正义感',
-          createTime: '2020.06.06 11；14'
-        },
-        {
-          id: '2',
-          username: 'Keyreu',
-          useravatar: require('../../asset/user2.png'),
-          labelContent: '老实说你的脾气太暴躁',
-          createTime: '2020.06.06 11；14'
-        }
+        // {
+        //   id: '1',
+        //   username: 'Tom',
+        //   useravatar: require('../../asset/user2.png'),
+        //   labelContent: '你真的超有正义感',
+        //   createTime: '2020.06.06 11；14'
+        // },
+        // {
+        //   id: '2',
+        //   username: 'Keyreu',
+        //   useravatar: require('../../asset/user2.png'),
+        //   labelContent: '老实说你的脾气太暴躁',
+        //   createTime: '2020.06.06 11；14'
+        // }
       ],
       flag: false, //留言详情弹窗
       deleteflag: false, //删除警示框
@@ -77,7 +77,15 @@ export default {
     }
   },
   components: {},
-  created() {},
+  created() {
+    // 查询所有留言
+    this.axios({
+      url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+    }).then((res) => {
+      console.log(res.data.data)
+      this.userlabels = res.data.data
+    })
+  },
   mounted() {},
   methods: {
     returnHome() {
@@ -101,11 +109,21 @@ export default {
     // 删除留言
     deletelabel() {
       console.log(this.deleteID)
+      this.axios({
+        url: this.GLOBAL.baseUrl + '/api/tomment/delete'
+      }).then((res) => {
+        console.log(res)
+      })
       ;(this.deleteflag = false), this.userlabels.splice(this.deleteID, 1)
     },
     // 聊天室
     chartRoom() {
       this.$router.push('/chartRoom')
+    },
+    // 处理时间的方法
+    replaceTime(e) {
+      let time = e.replace('T', '-')
+      return time
     }
   },
   computed: {}
@@ -176,17 +194,20 @@ export default {
   position: absolute;
   width: 50px;
   height: 50px;
-  margin-top: 100%;
-  margin-left: 20%;
+  top: 600px;
+  left: 270px;
   z-index: 1;
   border-radius: 50%;
 }
 .userdetail {
+  position: absolute;
   width: 70%;
   height: 150px;
   z-index: 99;
   margin: 0 auto;
-  margin-top: 20%;
+  top: 250px;
+  left: 60px;
+  background-color: #ffffff;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
   border: 1px solid #eeeeee;
   border-radius: 5px;

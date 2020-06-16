@@ -49,7 +49,7 @@
         <div
           class="label-collection"
           v-for="item in labels.slice(labelStart, labelEnd)"
-          :key="item.id"
+          :key="item.tbId"
         >
           <label class="title-xu" @click="click(item)">{{ item.labelContent }}</label>
         </div>
@@ -95,7 +95,7 @@ export default {
     },
     //点击标签
     click(item) {
-      console.log(item.id), console.log(item.labelContent), (this.inputValue = item.labelContent)
+      console.log(item.tbId), console.log(item.labelContent), (this.inputValue = item.labelContent)
     },
     //发送弹幕
     send() {
@@ -103,6 +103,20 @@ export default {
       this.flag = false
       //获取输入文字
       this.inputValue = document.getElementById('label-input').value
+      //增加留言接口
+      this.axios({
+        method: 'post',
+        url: this.GLOBAL.baseUrl + '/api/comment/addComment',
+        data: {
+          userId: 10,
+          content: this.inputValue,
+          deleteFlag: false,
+          gmtCreate: this.getTime(),
+          gmtModified: this.getTime()
+        }
+      }).then((res) => {
+        console.log(res)
+      })
       //弹幕
       this.danmu = this.inputValue
       //清空输入框
@@ -110,9 +124,8 @@ export default {
     },
     // 换一批
     changeLabel() {
-      console.log('s' + this.labelStart + 'e' + this.labelEnd),
-        (this.labelStart += 4),
-        (this.labelEnd += 3)
+      ;(this.labelStart += 4), (this.labelEnd += 3)
+      // 当labelStart大于labels数量时，label从0开始展示
       if (this.labelStart >= this.labels.length) {
         ;(this.labelStart = 0), (this.labelEnd = 4)
       }
@@ -122,6 +135,12 @@ export default {
     },
     gomanage() {
       this.$router.push('/manage')
+    },
+    //获取时间
+    getTime() {
+      var timestamp = new Date().getTime() //获取当前毫秒时间戳
+      var nowdate = new Date(timestamp) / 1000 //把当前日期变成时间戳
+      return new Date(parseInt(nowdate) * 1000).toLocaleString().substr(0, 17) //把时间戳转换日期格式
     }
   },
   computed: {},
@@ -129,7 +148,7 @@ export default {
   created() {
     // 留言标签
     this.axios({
-      url: this.GLOBAL.baseUrl + '/tLabel/selectLabel'
+      url: this.GLOBAL.baseUrl + '/api/label/selectLabel'
     }).then((res) => {
       console.log(res.data.data)
       this.labels = res.data.data
