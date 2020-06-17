@@ -30,7 +30,7 @@
         <img :src="detail.useravatar" class="usericon" />
         <div class="name-time">
           <p>{{ detail.username }}</p>
-          <p>{{ detail.gmtCreate.replace('T', ' ') }}</p>
+          <p>{{ detail.gmtCreate }}</p>
         </div>
       </div>
       <button class="confirmbtn" @click="closealert">我知道了</button>

@@ -110,9 +110,7 @@ export default {
         data: {
           userId: 10,
           content: this.inputValue,
-          deleteFlag: false,
-          gmtCreate: this.getTime(),
-          gmtModified: this.getTime()
+          deleteFlag: false
         }
       }).then((res) => {
         console.log(res)
