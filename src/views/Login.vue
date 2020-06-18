@@ -96,9 +96,7 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.$refs.loginForm)
-  }
+  mounted() {}
 }
 </script>
 

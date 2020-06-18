@@ -16,9 +16,7 @@
         loop="loop"
         hidden="hidden"
       ></audio>
-      <div>
-        {{ title }}
-      </div>
+      <div>你好,{{ user.name }}</div>
       <img class="topicon" src="../../asset/fengxiang.png" />
     </div>
     <!-- 中间头像 -->
@@ -66,11 +64,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      user: {
-        name: 'Tom',
-        avatar: require('../../asset/bg_weidenglu.png')
-      },
-      title: '你好，倾诉者',
+      user: {},
       isPlay: true, //音乐播放
       inputValue: '', //输入框文字
       labels: [],
@@ -151,6 +145,8 @@ export default {
       console.log(res.data.data)
       this.labels = res.data.data
     })
+    // user
+    this.user = this.$store.state.user
   },
   mounted() {}
 }

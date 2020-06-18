@@ -5,15 +5,10 @@
       <p>倾诉留言卡</p>
     </div>
     <div class="container" v-for="(item, index) in userlabels" :key="index">
-      <!-- 没有评论时 -->
-      <div class="nonelabel" v-if="item.length === null">
-        <p class="p1">暂时没有人评论</p>
-        <button class="btn">邀请好友评论</button>
-      </div>
       <!-- 有评论时 -->
-      <div v-else class="detail">
-        <img :src="item.useravatar" class="icon" @click="lookdetail(item)" />
-        <img src="../../asset/delete.png" class="icon" @click="deletealert(index)" />
+      <div class="detail">
+        <img :src="item.avatar" class="icon" @click="lookdetail(item)" />
+        <img src="../../asset/delete.png" class="icon" @click="deletealert(item.tbId, index)" />
         <input
           id="label-input"
           class="label-input"
@@ -22,6 +17,11 @@
           :value="item.content"
         />
       </div>
+    </div>
+    <!-- 没有评论时 -->
+    <div class="nonelabel" v-show="show">
+      <p class="p1">暂时没有人评论</p>
+      <button class="btn">邀请好友评论</button>
     </div>
     <!-- 留言者详情框 -->
     <div class="userdetail" v-show="flag">
@@ -54,26 +54,13 @@ export default {
   name: 'LabelManage',
   data() {
     return {
-      userlabels: [
-        // {
-        //   id: '1',
-        //   username: 'Tom',
-        //   useravatar: require('../../asset/user2.png'),
-        //   labelContent: '你真的超有正义感',
-        //   createTime: '2020.06.06 11；14'
-        // },
-        // {
-        //   id: '2',
-        //   username: 'Keyreu',
-        //   useravatar: require('../../asset/user2.png'),
-        //   labelContent: '老实说你的脾气太暴躁',
-        //   createTime: '2020.06.06 11；14'
-        // }
-      ],
+      userlabels: [],
       flag: false, //留言详情弹窗
       deleteflag: false, //删除警示框
       detail: [], //详情信息，数据传递
-      deleteID: 0 //删除id
+      deleteID: 0, //删除id
+      index: 0,
+      show: false
     }
   },
   components: {},
@@ -82,8 +69,12 @@ export default {
     this.axios({
       url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
     }).then((res) => {
-      console.log(res.data.data)
       this.userlabels = res.data.data
+      console.log(this.userlabels)
+      // 如果没有留言
+      if (this.userlabels.length === 0) {
+        this.show = !this.show
+      }
     })
   },
   mounted() {},
@@ -97,10 +88,14 @@ export default {
       this.flag = true
       this.detail = item
     },
-    // 删除警示框
-    deletealert(e) {
+    /**
+      删除警示框
+      e表示传过来的留言tbId,index表示当前留言下标
+     */
+    deletealert(e, index) {
       this.deleteflag = !this.deleteflag
       this.deleteID = e
+      this.index = index
     },
     // 关闭弹窗
     closealert() {
@@ -109,12 +104,21 @@ export default {
     // 删除留言
     deletelabel() {
       console.log(this.deleteID)
+      console.log(this.index)
       this.axios({
-        url: this.GLOBAL.baseUrl + '/api/tomment/delete'
+        method: 'delete',
+        url: this.GLOBAL.baseUrl + '/api/comment/delete',
+        params: {
+          tbId: this.deleteID
+        }
       }).then((res) => {
         console.log(res)
       })
-      ;(this.deleteflag = false), this.userlabels.splice(this.deleteID, 1)
+      ;(this.deleteflag = false), this.userlabels.splice(this.index, 1)
+      // 删除之后再次判断，如果没有留言
+      if (this.userlabels.length === 0) {
+        this.show = !this.show
+      }
     },
     // 聊天室
     chartRoom() {
@@ -166,6 +170,7 @@ export default {
   border: none;
   outline: none;
   background-color: #00c7ff;
+  margin-left: 80px;
   width: 200px;
   height: 40px;
   border-radius: 60px;

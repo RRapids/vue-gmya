@@ -4,6 +4,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     //这里放全局参数
+    token: localStorage.getItem('token'),
+    user: JSON.parse(localStorage.getItem('user'))
   },
   mutations: {
     //这里是set方法
