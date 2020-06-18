@@ -102,7 +102,7 @@ export default {
         method: 'post',
         url: this.GLOBAL.baseUrl + '/api/comment/addComment',
         data: {
-          userId: 10,
+          userId: this.user.id,
           content: this.inputValue,
           deleteFlag: false
         }

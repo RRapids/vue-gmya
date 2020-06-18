@@ -7,7 +7,7 @@
     <div class="container" v-for="(item, index) in userlabels" :key="index">
       <!-- 有评论时 -->
       <div class="detail">
-        <img :src="item.avatar" class="icon" @click="lookdetail(item)" />
+        <img src="../../asset/user2.png" class="icon" @click="lookdetail(item)" />
         <img src="../../asset/delete.png" class="icon" @click="deletealert(item.tbId, index)" />
         <input
           id="label-input"
@@ -27,9 +27,9 @@
     <div class="userdetail" v-show="flag">
       <p class="p2">评论人</p>
       <div class="usercontent">
-        <img :src="detail.useravatar" class="usericon" />
+        <img :src="userInfo.avatar" class="usericon" />
         <div class="name-time">
-          <p>{{ detail.username }}</p>
+          <p>{{ userInfo.userName }}</p>
           <p>{{ detail.gmtCreate }}</p>
         </div>
       </div>
@@ -60,7 +60,8 @@ export default {
       detail: [], //详情信息，数据传递
       deleteID: 0, //删除id
       index: 0,
-      show: false
+      show: false,
+      userInfo: []
     }
   },
   components: {},
@@ -83,10 +84,22 @@ export default {
       //返回上一个页面
       this.$router.go(-1)
     },
-    // 留言详情
+
+    /**
+       留言详情
+     根据用户Id查找用户
+    */
     lookdetail(item) {
       this.flag = true
       this.detail = item
+      this.axios({
+        url: this.GLOBAL.baseUrl + '/api/user/selectById',
+        params: {
+          userId: item.userId
+        }
+      }).then((res) => {
+        this.userInfo = res.data.data
+      })
     },
     /**
       删除警示框
@@ -101,10 +114,12 @@ export default {
     closealert() {
       ;(this.flag = false), (this.deleteflag = false)
     },
-    // 删除留言
+    /**
+
+      // 删除留言
+     */
+
     deletelabel() {
-      console.log(this.deleteID)
-      console.log(this.index)
       this.axios({
         method: 'delete',
         url: this.GLOBAL.baseUrl + '/api/comment/delete',
@@ -125,7 +140,7 @@ export default {
       this.$router.push('/chartRoom')
     },
     // 处理时间的方法
-    replaceTime(e) {
+    replace(e) {
       let time = e.replace('T', '-')
       return time
     }
