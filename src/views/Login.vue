@@ -19,6 +19,13 @@
         <button class="other-btn">智慧校园登录</button>
       </div>
     </div>
+    <!-- 遮罩层 -->
+    <div class="mask" v-if="show">
+      <div class="dialog">
+        <h4>账号或密码错误</h4>
+        <button class="center" @click="show = !show">确定</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,19 +34,12 @@ export default {
   name: 'Login',
   data() {
     return {
-      // 账号填写规则
-      accountRules: [{ validate: (val) => !val, message: '必须填写账号' }],
-      // 密码填写规则
-      passwordRules: [
-        { validate: (val) => !val, message: '必须填写密码' },
-        { validate: (val) => val.length >= 3 && val.length <= 10, message: '密码长度大于3小于10' }
-      ],
       // 验证表单
       validateForm: {
-        account: '111',
-        password: '123456'
+        account: '',
+        password: ''
       },
-      vailiable: true
+      show: false
     }
   },
   methods: {
@@ -52,29 +52,40 @@ export default {
           password: this.validateForm.password
         }
       }).then((res) => {
+        // 请求成功判断
         if (res.data.code === 1) {
-          // 存token
-          localStorage.setItem('token', res.data.data.token)
-          let user = {
-            id: res.data.data.userDto.userId,
-            name: res.data.data.userDto.userName,
-            role: res.data.data.userDto.roleId,
-            avatar: res.data.data.userDto.avatar
+          // 用户不存在
+          if (res.data.data.message != null) {
+            console.log(res.data.data.message)
+            this.show = true
           }
-          // 存user信息
-          localStorage.setItem('user', JSON.stringify(user))
-          if (user.role === '1') {
-            console.log('用户:' + user.name)
-            this.$router.push('/')
-          } else if (user.role === '2') {
-            console.log('客服:' + user.name)
-            this.$router.push('/kefuHome')
+          //用户存在
+          else if (typeof res.data.data.message == 'undefined') {
+            // 存token
+            localStorage.setItem('token', res.data.data.token)
+            let user = {
+              id: res.data.data.userDto.userId,
+              name: res.data.data.userDto.userName,
+              role: res.data.data.userDto.roleId,
+              avatar: res.data.data.userDto.avatar
+            }
+            // 存user信息
+            localStorage.setItem('user', JSON.stringify(user))
+            if (user.role === '1') {
+              console.log('用户:' + user.name)
+              this.$router.push('/')
+            } else if (user.role === '2') {
+              console.log('客服:' + user.name)
+              this.$router.push('/kefuHome')
+            } else {
+              console.log('未找到此用户')
+            }
+          } else {
+            //登录失败
+            alert(res.data.msg)
+            //清空
+            this.clear()
           }
-        } else {
-          //登录失败
-          alert(res.data.msg)
-          //清空
-          this.clear()
         }
       })
     },
@@ -145,5 +156,31 @@ input {
   border: none;
   outline: none;
   color: #16a085;
+}
+.mask {
+  z-index: 900;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .dialog {
+    z-index: 1000;
+    width: 200px;
+    background-color: #fff;
+    line-height: 30px;
+    border-radius: 10px;
+    text-align: center;
+    .center {
+      width: 100px;
+      border: none;
+      border-bottom: 10px;
+      font-size: 16px;
+    }
+  }
 }
 </style>

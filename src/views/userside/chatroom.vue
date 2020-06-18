@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  name: 'chartRoom',
+  name: 'ChartRoom',
   data() {
     return {
       // 当前时间
