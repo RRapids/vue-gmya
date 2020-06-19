@@ -8,6 +8,7 @@ import connect from '../views/kefu/connect.vue'
 import notConnect from '../views/kefu/notConnect.vue'
 import kefuChatRoom from '../views/kefu/kefuChatRoom.vue'
 import KefuHome from '../views/kefu/kefuHome.vue'
+import Share from '../views/share/share.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/share',
+    name: 'Share',
+    component: Share
   },
   {
     path: '/manage',

@@ -17,7 +17,7 @@
         hidden="hidden"
       ></audio>
       <div>你好,{{ user.name }}</div>
-      <img class="topicon" src="../../asset/fengxiang.png" />
+      <img class="topicon" src="../../asset/fengxiang.png" @click="goShare" />
     </div>
     <!-- 中间头像 -->
     <div class="center-container">
@@ -122,11 +122,17 @@ export default {
         ;(this.labelStart = 0), (this.labelEnd = 4)
       }
     },
+    // 登录页
     goLogin() {
       this.$router.push('/login')
     },
+    // 留言管理页
     gomanage() {
       this.$router.push('/manage')
+    },
+    // 分享页
+    goShare() {
+      this.$router.push('/share')
     },
     //获取时间
     getTime() {

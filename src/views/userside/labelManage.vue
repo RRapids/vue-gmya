@@ -214,10 +214,11 @@ export default {
   position: absolute;
   width: 50px;
   height: 50px;
-  top: 600px;
+  top: 500px;
   left: 270px;
   z-index: 1;
   border-radius: 50%;
+  box-shadow: 0 3px 4px 0 rgba(92, 189, 170, 0.5), 0 6px 10px 0 rgba(92, 189, 170, 0.2);
 }
 .userdetail {
   position: absolute;
