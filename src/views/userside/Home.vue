@@ -26,7 +26,7 @@
     <!-- 弹幕 -->
     <div v-show="flag" v-for="(item, index) in danmu" :key="index">
       <!-- 使用留言的下标来固定弹幕的位置 -->
-      <div class="block" :style="{ top: (index + 1) * 100 + 10 + 'px' }">
+      <div class="block" :style="{ top: (index + 1) * 100 + 'px' }">
         <span class="danmu-input">{{ item.content }}</span>
       </div>
     </div>
