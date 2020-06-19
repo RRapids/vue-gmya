@@ -21,7 +21,7 @@
     <!-- 没有评论时 -->
     <div class="nonelabel" v-show="show">
       <p class="p1">暂时没有人评论</p>
-      <button class="btn">邀请好友评论</button>
+      <button class="btn" @click="goShare">邀请好友评论</button>
     </div>
     <!-- 留言者详情框 -->
     <div class="userdetail" v-show="flag">
@@ -115,10 +115,8 @@ export default {
       ;(this.flag = false), (this.deleteflag = false)
     },
     /**
-
-      // 删除留言
+      删除留言
      */
-
     deletelabel() {
       this.axios({
         method: 'delete',
@@ -143,6 +141,9 @@ export default {
     replace(e) {
       let time = e.replace('T', '-')
       return time
+    },
+    goShare() {
+      this.$router.push('/share')
     }
   },
   computed: {}

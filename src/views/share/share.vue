@@ -13,6 +13,7 @@
 </template>
 
 <script>
+// 引入QRCode
 import QRCode from 'qrcode'
 export default {
   name: 'Share',
