@@ -24,8 +24,11 @@
       <img :src="user.avatar" class="avatar" />
     </div>
     <!-- 弹幕 -->
-    <div class="block" :hidden="flag">
-      <input class="danmu-input" type="text" :value="danmu" />
+    <div v-show="flag" v-for="(item, index) in danmu" :key="index">
+      <!-- 使用留言的下标来固定弹幕的位置 -->
+      <div class="block" :style="{ top: (index + 1) * 100 + 10 + 'px' }">
+        <span class="danmu-input">{{ item.content }}</span>
+      </div>
     </div>
     <!-- 下部内容 -->
     <div class="under-content">
@@ -71,7 +74,8 @@ export default {
       labelStart: 0, //留言标签开始位置
       labelEnd: 4, //留言标签最后一个
       danmu: [], //弹幕
-      flag: true //弹幕隐藏
+      flag: true, //弹幕隐藏
+      danmuHeight: 0
     }
   },
   methods: {
@@ -93,8 +97,6 @@ export default {
     },
     //发送弹幕
     send() {
-      // 弹幕不隐藏
-      this.flag = false
       //获取输入文字
       this.inputValue = document.getElementById('label-input').value
       //增加留言接口
@@ -108,9 +110,9 @@ export default {
         }
       }).then((res) => {
         console.log(res)
+        //弹幕
+        this.getLabels()
       })
-      //弹幕
-      this.danmu = this.inputValue
       //清空输入框
       this.inputValue = ''
     },
@@ -139,10 +141,23 @@ export default {
       var timestamp = new Date().getTime() //获取当前毫秒时间戳
       var nowdate = new Date(timestamp) / 1000 //把当前日期变成时间戳
       return new Date(parseInt(nowdate) * 1000).toLocaleString().substr(0, 17) //把时间戳转换日期格式
+    },
+    // 查询所有留言
+    getLabels() {
+      this.axios({
+        url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+      }).then((res) => {
+        console.log(res.data.data)
+        this.danmu = res.data.data
+        // 如果没有留言
+        if (this.danmu.length === 0) {
+          this.flag = false
+        } else {
+          this.flag = true
+        }
+      })
     }
   },
-  computed: {},
-  components: {},
   created() {
     // 留言标签
     this.axios({
@@ -154,14 +169,27 @@ export default {
     // user
     this.user = this.$store.state.user
   },
-  mounted() {}
+  mounted() {
+    // 查询所有留言
+    this.axios({
+      url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+    }).then((res) => {
+      console.log(res.data.data)
+      this.danmu = res.data.data
+      // 如果没有留言
+      if (this.danmu.length === 0) {
+        this.flag = false
+      } else {
+        this.flag = true
+      }
+    })
+  }
 }
 </script>
 
 <style scoped lang="scss">
 // 弹幕
 .block {
-  margin-top: 10px;
   position: absolute;
   animation: barrage 5s linear infinite;
 }
@@ -298,7 +326,7 @@ export default {
   display: flex;
   padding: 5px;
   border: none;
-  background-color: #00c7ff;
+  background-color: rgb(0, 199, 255, 0.8);
   outline: none;
   color: #ffffff;
   border-radius: 30px;
