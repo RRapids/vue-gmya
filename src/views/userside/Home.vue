@@ -30,7 +30,9 @@
     <div v-show="flag" v-for="(item, index) in danmu.slice(0, 5)" :key="index">
       <!-- 使用留言的下标来固定弹幕的位置 -->
       <div class="block" :style="{ top: (index + 1) * 80 + 20 + 'px' }">
-        <span class="danmu-input">{{ item.content }}</span>
+        <span class="danmu-input" :style="{ color: computed25Color(index) }">{{
+          item.content
+        }}</span>
       </div>
     </div>
     <!-- 下部内容 -->
@@ -118,6 +120,22 @@ export default {
       })
       //清空输入框
       this.inputValue = ''
+    },
+    //动态颜色
+    computed25Color(data) {
+      let color = ''
+      if (data === 0) {
+        color = '#BC4358'
+      } else if (data === 1) {
+        color = '#FFFFFF'
+      } else if (data === 2) {
+        color = '#8668CA'
+      } else if (data === 3) {
+        color = '#FF000'
+      } else if (data === 4) {
+        color = '#43BC44'
+      }
+      return color
     },
     // 换一批
     changeLabel() {
@@ -329,9 +347,9 @@ export default {
   display: flex;
   padding: 5px;
   border: none;
-  background-color: rgb(0, 199, 255, 0.8);
+  background-color: rgb(255, 199, 255, 0.8);
   outline: none;
-  color: #ffffff;
+  // color: #ffffff;
   border-radius: 30px;
   text-align: center;
   z-index: 1;
