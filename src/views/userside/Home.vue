@@ -23,10 +23,13 @@
     <div class="center-container">
       <img :src="user.avatar" class="avatar" />
     </div>
-    <!-- 弹幕 -->
-    <div v-show="flag" v-for="(item, index) in danmu" :key="index">
+    <!-- 
+      弹幕 
+      首页允许漂浮弹幕数：5
+    -->
+    <div v-show="flag" v-for="(item, index) in danmu.slice(0, 5)" :key="index">
       <!-- 使用留言的下标来固定弹幕的位置 -->
-      <div class="block" :style="{ top: (index + 1) * 100 + 'px' }">
+      <div class="block" :style="{ top: (index + 1) * 80 + 20 + 'px' }">
         <span class="danmu-input">{{ item.content }}</span>
       </div>
     </div>
