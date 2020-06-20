@@ -40,3 +40,14 @@ new Vue({
   store,
   render: (h) => h(App)
 }).$mount('#app')
+
+// WebSocket连接
+var ws = new WebSocket('ws://localhost:8081/websocket')
+ws.onopen = function() {
+  console.log('连接成功')
+}
+
+ws.onclose = function() {
+  console.log('关闭连接')
+}
+console.log(ws)
