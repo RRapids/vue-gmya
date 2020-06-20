@@ -80,12 +80,12 @@ export default {
             } else {
               console.log('未找到此用户')
             }
-          } else {
-            //登录失败
-            alert(res.data.msg)
-            //清空
-            this.clear()
           }
+        } else {
+          //登录失败
+          alert(res.data.msg)
+          //清空
+          this.clear()
         }
       })
     },
