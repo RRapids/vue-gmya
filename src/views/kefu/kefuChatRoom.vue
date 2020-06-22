@@ -12,15 +12,16 @@
       </div>
       <div v-for="(item, index) in messageList" :key="index">
         <!-- 左侧 -->
-        <div class="left" v-if="item.type === 1">
-          <img :src="userInfo.userImg" class="usericon" />
+        <div class="left" v-if="item.type === 2">
+          <img :src="item.userInfo.userImg" class="usericon" />
           <div class="mssageInput">
             <span>{{ item.message }}</span>
           </div>
         </div>
         <br />
+
         <!-- 右侧 -->
-        <div class="right" v-if="item.type === 2">
+        <div class="right" v-if="item.type === 1">
           <div class="mssageInput">
             <span>{{ item.message }}</span>
           </div>
@@ -49,7 +50,17 @@ export default {
       // 当前时间
       localTime: '',
       // 用户信息
-      userInfo: [],
+      userInfo: {
+        userId: 1,
+        userName: 'Tom',
+        userImg: require('../../asset/user2.png')
+      },
+      // 客服消息
+      kefuInfo: {
+        kefuId: 1,
+        kefuName: 'kufu',
+        kefuImg: require('../../asset/user.png')
+      },
       // 输入框内容
       inputValue: '',
       // 消息列表
@@ -57,27 +68,37 @@ export default {
         // type = 1 对方内容     type = 2 我发送内容
         {
           type: 1,
-          message: '我有一个问题',
-          userInfo: {}
-        },
-        {
-          type: 2,
           message: '你好！',
           kefuInfo: {
             kefuId: 1,
             kefuName: 'kufu',
             kefuImg: require('../../asset/user.png')
           }
+        },
+        {
+          type: 2,
+          message: '我有一个问题',
+          userInfo: {
+            userId: 1,
+            userName: 'Tom',
+            userImg: require('../../asset/user2.png')
+          }
         }
       ],
       // 连接状态
-      connectState: true //模拟连接
+      connectState: true, //模拟连接
+      ws: undefined,
+      user: null,
+      mToUserid: null, // 接收人ID
+      receive: null
     }
   },
   methods: {
     // 返回上个页面
     returnLabel() {
       this.$router.go(-1)
+      this.ws.close()
+      this.userPath = null
     },
     // 滚动
     scroll() {
@@ -89,20 +110,27 @@ export default {
     sendEvent() {
       this.inputValue = this.trim(this.inputValue)
       console.log(this.inputValue)
-      if (this.inputValue.length > 0) {
-        if (this.connectState) {
-          this.messageList.push({
-            type: 2,
-            message: this.inputValue,
-            kefuInfo: {
-              kefuId: 1,
-              kefuName: 'kufu',
-              kefuImg: require('../../asset/user.png')
-            }
-          })
-        }
-        this.inputValue = ''
+      if (this.connectState) {
+        this.messageList.push({
+          type: 1,
+          message: this.inputValue,
+          kefuInfo: {
+            kefuId: 1,
+            kefuName: 'kufu',
+            kefuImg: require('../../asset/user.png')
+          }
+        })
       }
+      // 向后端推送消息
+      let json = {
+        mContent: this.inputValue,
+        mFromUserid: this.user.userId,
+        mToUserid: this.mToUserid,
+        userPath: this.user.userPath
+      }
+      console.log(JSON.stringify(json))
+      this.ws.send(JSON.stringify(json))
+      this.inputValue = ''
     },
     trim(s) {
       return s.replace(/(^\s*)|(\s*$)/g, '')
@@ -118,12 +146,59 @@ export default {
     const userData = JSON.parse(sessionStorage.getItem('userstorage'))
     this.userInfo = userData.userInfo.customInfo
     console.log(this.userInfo.userName)
+
+    // 获取用户信息
+    this.user = this.$store.state.user
+    console.log(this.user)
+
+    console.log('用户ID：' + this.user.id)
+    console.log('送信地址：' + this.user.userPath)
+    if (this.user != null) {
+      let that = this
+
+      // WebSocket连接
+      this.ws = new WebSocket('ws://localhost:8080/websocket?' + this.user.id)
+      // 连接时被调用
+      this.ws.onopen = function() {
+        console.log('连接成功')
+      }
+
+      // 收到消息时被调用
+      this.ws.onmessage = function(e) {
+        // let that = this
+        console.log('返回内容：' + e.data)
+
+        // 字符串转JSON
+        that.receive = JSON.parse(e.data)
+        console.log('聊天内容：' + that.receive.mContent)
+        // 保存对方送信地址
+        that.mToUserid = that.receive.userPath
+        console.log(that.mToUserid)
+        that.messageList.push({
+          type: 2,
+          message: that.receive.mContent,
+          userInfo: that.userInfo
+        })
+      }
+      // 关闭时被调用
+      this.ws.onclose = function() {
+        console.log('关闭连接')
+      }
+    } else {
+      console.log('连接失败')
+    }
   },
   mounted() {
     this.connectEvent()
   },
   updated() {
     this.scroll()
+  },
+  beforeDestroy() {
+    console.log('还原数据')
+    this.user = null
+    this.mToUserId = null
+    this.receive = null
   }
 }
 </script>

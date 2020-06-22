@@ -55,6 +55,12 @@ export default {
         userName: 'Tom',
         userImg: require('../../asset/user2.png')
       },
+      // 客服消息
+      kefuInfo: {
+        kefuId: 1,
+        kefuName: 'kufu',
+        kefuImg: require('../../asset/user.png')
+      },
       // 输入框内容
       inputValue: '',
       // 消息列表
@@ -80,13 +86,19 @@ export default {
         }
       ],
       // 连接状态
-      connectState: true //模拟连接
+      connectState: true, //模拟连接
+      ws: undefined,
+      user: null,
+      mToUserid: null, // 接收人ID
+      receive: null
     }
   },
   methods: {
     // 返回上个页面
     returnLabel() {
       this.$router.go(-1)
+      this.ws.close()
+      this.userPath = null
     },
     // 滚动
     scroll() {
@@ -98,16 +110,23 @@ export default {
     sendEvent() {
       this.inputValue = this.trim(this.inputValue)
       console.log(this.inputValue)
-      if (this.inputValue.length > 0) {
-        if (this.connectState) {
-          this.messageList.push({
-            type: 2,
-            message: this.inputValue,
-            userInfo: this.userInfo
-          })
-        }
-        this.inputValue = ''
+      if (this.connectState) {
+        this.messageList.push({
+          type: 2,
+          message: this.inputValue,
+          userInfo: this.userInfo
+        })
       }
+      // 向后端推送消息
+      let json = {
+        mContent: this.inputValue,
+        mFromUserid: this.user.id,
+        mToUserid: this.mToUserid,
+        userPath: this.user.userPath
+      }
+      console.log('我发送的信息' + JSON.stringify(json))
+      this.ws.send(JSON.stringify(json))
+      this.inputValue = ''
     },
     trim(s) {
       return s.replace(/(^\s*)|(\s*$)/g, '')
@@ -119,12 +138,65 @@ export default {
     var timestamp = new Date().getTime() //获取当前毫秒时间戳
     var nowdate = new Date(timestamp) / 1000 //把当前日期变成时间戳
     this.localTime = new Date(parseInt(nowdate) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ') //把时间戳转换日期格式
+
+    // 获取用户信息
+    this.user = this.$store.state.user
+    console.log(this.user)
+
+    console.log('用户ID：' + this.user.id)
+    console.log('送信地址：' + this.user.userPath)
+    if (this.user != null) {
+      let that = this
+
+      // WebSocket连接
+      this.ws = new WebSocket('ws://121.199.6.2:8080/websocket?' + this.user.id)
+      // 连接时被调用
+      this.ws.onopen = function() {
+        console.log('连接成功')
+      }
+
+      // 收到消息时被调用
+      this.ws.onmessage = function(e) {
+        // let that = this
+        console.log('我收到的信息：' + e.data)
+
+        // 字符串转JSON
+        that.receive = JSON.parse(e.data)
+        console.log('聊天内容：' + that.receive.mContent)
+        // 保存对方送信地址
+        if (that.receive.userPath == null) {
+          that.mToUserid = null
+          console.log('小 T' + that.mToUserid)
+        } else {
+          that.mToUserid = that.receive.userPath
+          console.log('用户' + that.mToUserid)
+        }
+        that.messageList.push({
+          type: 1,
+          message: that.receive.mContent,
+          kefuInfo: that.kefuInfo
+        })
+      }
+      // 关闭时被调用
+      this.ws.onclose = function() {
+        console.log('关闭连接')
+      }
+    } else {
+      console.log('连接失败')
+    }
   },
   mounted() {
     this.connectEvent()
   },
   updated() {
     this.scroll()
+  },
+  beforeDestroy() {
+    console.log('还原数据')
+    this.user = null
+    this.mToUserId = null
+    this.receive = null
+    this.ws.close()
   }
 }
 </script>

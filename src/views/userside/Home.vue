@@ -189,6 +189,7 @@ export default {
     })
     // user
     this.user = this.$store.state.user
+    console.log(this.user.id)
   },
   mounted() {
     // 查询所有留言

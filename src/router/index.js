@@ -4,8 +4,8 @@ import Home from '../views/userside/Home.vue'
 import Login from '../views/Login.vue'
 import LabelMange from '../views/userside/labelManage.vue'
 import ChartRoom from '../views/userside/chatroom.vue'
-import connect from '../views/kefu/connect.vue'
-import notConnect from '../views/kefu/notConnect.vue'
+// import connect from '../views/kefu/connect.vue'
+// import notConnect from '../views/kefu/notConnect.vue'
 import kefuChatRoom from '../views/kefu/kefuChatRoom.vue'
 import KefuHome from '../views/kefu/kefuHome.vue'
 import Share from '../views/share/share.vue'
@@ -45,23 +45,23 @@ const routes = [
   {
     path: '/kefuHome',
     name: 'KefuHome',
-    component: KefuHome,
-    children: [
-      {
-        path: '/',
-        redirect: 'connect'
-      },
-      {
-        path: 'connect',
-        name: 'Connect',
-        component: connect
-      },
-      {
-        path: 'notConnect',
-        name: 'NotConnect',
-        component: notConnect
-      }
-    ]
+    component: KefuHome
+    // children: [
+    //   {
+    //     path: '/',
+    //     redirect: 'connect'
+    //   },
+    //   {
+    //     path: 'connect',
+    //     name: 'Connect',
+    //     component: connect
+    //   },
+    //   {
+    //     path: 'notConnect',
+    //     name: 'NotConnect',
+    //     component: notConnect
+    //   }
+    // ]
   },
   {
     path: '/kefuChatRoom',

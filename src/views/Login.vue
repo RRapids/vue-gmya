@@ -63,11 +63,13 @@ export default {
           else if (typeof res.data.data.message == 'undefined') {
             // 存token
             localStorage.setItem('token', res.data.data.token)
+            console.log(res.data.data.userDto)
             let user = {
               id: res.data.data.userDto.userId,
               name: res.data.data.userDto.userName,
               role: res.data.data.userDto.roleId,
-              avatar: res.data.data.userDto.avatar
+              avatar: res.data.data.userDto.avatar,
+              userPath: res.data.data.userDto.userPath
             }
             // 存user信息
             localStorage.setItem('user', JSON.stringify(user))
