@@ -72,7 +72,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      user: {},
+      user: this.$store.state.user,
       isPlay: true, //音乐播放
       inputValue: '', //输入框文字
       labels: [],
@@ -147,6 +147,8 @@ export default {
     },
     // 登录页
     goLogin() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
       this.$router.push('/login')
     },
     // 留言管理页
@@ -165,8 +167,10 @@ export default {
     },
     // 查询所有留言
     getLabels() {
+      // 查询留言
+      let user = this.$store.state.user
       this.axios({
-        url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+        url: this.GLOBAL.baseUrl + '/api/comment/selectById?userId=' + user.id
       }).then((res) => {
         console.log(res.data.data)
         this.danmu = res.data.data
@@ -180,6 +184,9 @@ export default {
     }
   },
   created() {
+    if (localStorage.getItem('token') === null) {
+      this.$router.push('/login')
+    }
     // 留言标签
     this.axios({
       url: this.GLOBAL.baseUrl + '/api/label/selectLabel'
@@ -187,14 +194,12 @@ export default {
       console.log(res.data.data)
       this.labels = res.data.data
     })
-    // user
-    this.user = this.$store.state.user
-    console.log(this.user.id)
   },
   mounted() {
-    // 查询所有留言
+    // 查询留言
+    let user = this.$store.state.user
     this.axios({
-      url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+      url: this.GLOBAL.baseUrl + '/api/comment/selectById?userId=' + user.id
     }).then((res) => {
       console.log(res.data.data)
       this.danmu = res.data.data

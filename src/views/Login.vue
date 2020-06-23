@@ -77,6 +77,8 @@ export default {
         this.show = true
         return false
       }
+      // 清空缓存
+      localStorage.clear()
       this.axios({
         method: 'post',
         url: this.GLOBAL.baseUrl + '/api/login',
@@ -96,7 +98,7 @@ export default {
           else if (typeof res.data.data.message == 'undefined') {
             // 存token
             localStorage.setItem('token', res.data.data.token)
-            console.log(res.data.data.userDto)
+            this.$store.commit('setToken', res.data.data.token)
             let user = {
               id: res.data.data.userDto.userId,
               name: res.data.data.userDto.userName,
@@ -106,6 +108,8 @@ export default {
             }
             // 存user信息
             localStorage.setItem('user', JSON.stringify(user))
+            this.$store.commit('setUser', JSON.stringify(user))
+
             if (user.role === '1') {
               console.log('用户:' + user.name)
               this.$router.push('/')
@@ -115,6 +119,7 @@ export default {
             } else {
               console.log('未找到此用户')
             }
+            window.location.reload()
           }
         } else {
           //登录失败
@@ -140,17 +145,21 @@ export default {
         return false
       }
       // 注册接口
-      // this.axios({
-      //   method: 'post',
-      //   url: this.GLOBAL.baseUrl + '',
-      //   data: {
-      //     userName: this.validateForm.userName,
-      //     account: this.validateForm.account,
-      //     password: this.validateForm.password
-      //   }
-      // }).then((res) => {
-      //   console.log(res)
-      // })
+      this.axios({
+        method: 'post',
+        url: this.GLOBAL.baseUrl + '/api/user/addUser',
+        data: {
+          avatar:
+            'https://upload.jianshu.io/users/upload_avatars/14261279/e625c28b-efac-4822-90c3-7011042192b3?imageMogr2/auto-orient/strip|imageView2/1/w/240/h/240',
+          userName: this.validateForm.userName,
+          account: this.validateForm.account,
+          password: this.validateForm.password
+        }
+      }).then((res) => {
+        console.log(res)
+        alert('注册成功')
+        ;(this.login = !this.login), (this.register = !this.register)
+      })
     },
     clear() {
       this.validateForm = {

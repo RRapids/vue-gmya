@@ -25,7 +25,7 @@
           <div class="mssageInput">
             <span>{{ item.message }}</span>
           </div>
-          <img :src="item.userInfo.userImg" class="usericon" />
+          <img :src="user.avatar" class="usericon" />
         </div>
         <br />
         <br />

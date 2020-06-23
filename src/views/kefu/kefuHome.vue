@@ -11,7 +11,7 @@
           :key="index"
           @click="goChat(item)"
         >
-          <img :src="item.customInfo.userImg" class="usericon" />
+          <img :src="users.avatar" class="usericon" />
           <div class="info">
             <p class="p1">{{ item.customInfo.userName }}</p>
             <p class="p2">这是最新的消息</p>
@@ -37,7 +37,7 @@
         <div v-for="(item, index) in messageList" :key="index">
           <!-- 左侧 -->
           <div class="left" v-if="item.type === 2">
-            <img :src="item.userInfo.userImg" class="usericon" />
+            <img :src="users.avatar" class="usericon" />
             <div class="mssageInput">
               <span>{{ item.message }}</span>
             </div>

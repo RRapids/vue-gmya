@@ -66,10 +66,12 @@ export default {
   },
   components: {},
   created() {
-    // 查询所有留言
+    let user = this.$store.state.user
+    // 查询用户留言
     this.axios({
-      url: this.GLOBAL.baseUrl + '/api/comment/selectComment'
+      url: this.GLOBAL.baseUrl + '/api/comment/selectById?userId=' + user.id
     }).then((res) => {
+      console.log(res)
       this.userlabels = res.data.data
       console.log(this.userlabels)
       // 如果没有留言
@@ -230,7 +232,7 @@ export default {
   top: 250px;
   left: 60px;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
   border: 1px solid #eeeeee;
   border-radius: 5px;
 }
