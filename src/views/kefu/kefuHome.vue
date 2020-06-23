@@ -11,7 +11,7 @@
           :key="index"
           @click="goChat(item)"
         >
-          <img :src="users.avatar" class="usericon" />
+          <img :src="item.customInfo.userImg" class="usericon" />
           <div class="info">
             <p class="p1">{{ item.customInfo.userName }}</p>
             <p class="p2">这是最新的消息</p>
@@ -36,8 +36,8 @@
         </div>
         <div v-for="(item, index) in messageList" :key="index">
           <!-- 左侧 -->
-          <div class="left" v-if="item.type === 2">
-            <img :src="users.avatar" class="usericon" />
+          <div class="left" v-if="item.type === 1">
+            <img :src="item.userInfo.userImg" class="usericon" />
             <div class="mssageInput">
               <span>{{ item.message }}</span>
             </div>
@@ -45,7 +45,7 @@
           <br />
 
           <!-- 右侧 -->
-          <div class="right" v-if="item.type === 1">
+          <div class="right" v-if="item.type === 2">
             <div class="mssageInput">
               <span>{{ item.message }}</span>
             </div>
@@ -79,13 +79,13 @@ export default {
       userInfo: {
         userId: 1,
         userName: 'Tom',
-        userImg: require('../../asset/user2.png')
+        userImg: ''
       },
       // 客服消息
       kefuInfo: {
         kefuId: 1,
         kefuName: 'kufu',
-        kefuImg: require('../../asset/user.png')
+        kefuImg: ''
       },
       // 输入框内容
       inputValue: '',
@@ -94,20 +94,20 @@ export default {
         // type = 1 对方内容     type = 2 我发送内容
         {
           type: 1,
-          message: '你好！',
-          kefuInfo: {
-            kefuId: 1,
-            kefuName: 'kufu',
-            kefuImg: require('../../asset/user.png')
-          }
-        },
-        {
-          type: 2,
           message: '我有一个问题',
           userInfo: {
             userId: 1,
             userName: 'Tom',
             userImg: require('../../asset/user2.png')
+          }
+        },
+        {
+          type: 2,
+          message: '你好！',
+          kefuInfo: {
+            kefuId: 1,
+            kefuName: 'kufu',
+            kefuImg: require('../../asset/user.png')
           }
         }
       ],
@@ -132,10 +132,9 @@ export default {
     // this.userInfo = userData.userInfo.customInfo
     // console.log(this.userInfo.userName)
 
-    // 获取用户信息
+    // 获取客服信息
     this.user = this.$store.state.user
     console.log(this.user)
-
     console.log('用户ID：' + this.user.id)
     console.log('送信地址：' + this.user.userPath)
     if (this.user != null) {
@@ -180,7 +179,7 @@ export default {
                     customInfo: {
                       userId: that.users.userId,
                       userName: that.users.userName,
-                      userImg: require('../../asset/user.png')
+                      userImg: that.users.avatar
                     }
                   })
                 }
@@ -191,10 +190,11 @@ export default {
                   customInfo: {
                     userId: that.users.userId,
                     userName: that.users.userName,
-                    userImg: require('../../asset/user.png')
+                    userImg: that.users.avatar
                   }
                 })
               }
+              that.userInfo.userImg = that.users.avatar
             })
         }
         console.log('聊天内容：' + that.receive.mContent)
@@ -207,7 +207,7 @@ export default {
           console.log(that.mToUserid)
         }
         that.messageList.push({
-          type: 2,
+          type: 1,
           message: that.receive.mContent,
           userInfo: that.userInfo
         })
@@ -251,7 +251,7 @@ export default {
       console.log(this.inputValue)
       if (this.connectState) {
         this.messageList.push({
-          type: 1,
+          type: 2,
           message: this.inputValue,
           kefuInfo: {
             kefuId: 1,
