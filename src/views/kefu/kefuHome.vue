@@ -14,10 +14,10 @@
           <img :src="item.customInfo.userImg" class="usericon" />
           <div class="info">
             <p class="p1">{{ item.customInfo.userName }}</p>
-            <p class="p2">这是最新的消息</p>
+            <p class="p2">{{ receive.mContent }}</p>
           </div>
           <div class="newsTime">
-            <p class="p3">09:29</p>
+            <p class="p3">{{ receive.mTime }}</p>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default {
       // 用户信息
       userInfo: {
         userId: 1,
-        userName: 'Tom',
+        userName: '',
         userImg: ''
       },
       // 客服消息
@@ -205,6 +205,7 @@ export default {
                 })
               }
               that.userInfo.userImg = that.users.avatar
+              that.userInfo.userName = that.users.userName
             })
           console.log('聊天内容：' + that.receive.mContent)
           // 保存对方送信地址
@@ -243,11 +244,6 @@ export default {
     // 返回上个页面
     returnLabel() {
       this.liaotian = !this.liaotian
-      for (let i = 0; i < this.customList.length; i++) {
-        if (this.customList[i].customInfo.userId == this.users.userId) {
-          this.customList.splice(i, 1)
-        }
-      }
     },
     // 滚动
     scroll() {
@@ -329,11 +325,15 @@ export default {
     .info {
       margin-left: 10px;
       line-height: 30%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
       .p1 {
         font-size: 14px;
         font-weight: 500;
       }
       .p2 {
+        font-size: 15px;
         font-size: 10px;
         color: #8e8e93;
       }
