@@ -17,7 +17,7 @@
             <p class="p2">{{ receive.mContent }}</p>
           </div>
           <div class="newsTime">
-            <p class="p3">{{ receive.mTime }}</p>
+            <p class="p3">{{ receive.mTime.hour + ':' + receive.mTime.minute }}</p>
           </div>
         </div>
       </div>
