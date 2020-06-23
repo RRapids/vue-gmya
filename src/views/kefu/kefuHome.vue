@@ -2,7 +2,7 @@
   <div>
     <div v-show="liaotian">
       <div class="toph">
-        <p>微客服</p>
+        <button class="rush" @click="rush">微客服</button>
       </div>
       <div class="cuscontainer">
         <div
@@ -152,8 +152,18 @@ export default {
         console.log('我收到的信息：' + e.data)
         // 字符串转JSON
         that.receive = JSON.parse(e.data)
-
-        if (that.receive.mFromUserid != null) {
+        // 如果用户没在线
+        if (that.receive.mFromUserid === '小T') {
+          console.log('断开了')
+          that.userInfo.userImg = require('../../asset/user2.png')
+          that.messageList.push({
+            type: 1,
+            message: that.receive.mContent,
+            userInfo: that.userInfo
+          })
+        }
+        // 用户在线
+        if (that.receive.mFromUserid != '小T') {
           that
             .axios({
               url: that.GLOBAL.baseUrl + '/api/user/selectById?userId=' + that.receive.mFromUserid
@@ -196,21 +206,21 @@ export default {
               }
               that.userInfo.userImg = that.users.avatar
             })
+          console.log('聊天内容：' + that.receive.mContent)
+          // 保存对方送信地址
+          if (that.receive.userPath == null) {
+            that.mToUserid = null
+            console.log(that.mToUserid)
+          } else {
+            that.mToUserid = that.receive.userPath
+            console.log(that.mToUserid)
+          }
+          that.messageList.push({
+            type: 1,
+            message: that.receive.mContent,
+            userInfo: that.userInfo
+          })
         }
-        console.log('聊天内容：' + that.receive.mContent)
-        // 保存对方送信地址
-        if (that.receive.userPath == null) {
-          that.mToUserid = null
-          console.log(that.mToUserid)
-        } else {
-          that.mToUserid = that.receive.userPath
-          console.log(that.mToUserid)
-        }
-        that.messageList.push({
-          type: 1,
-          message: that.receive.mContent,
-          userInfo: that.userInfo
-        })
       }
       // 关闭时被调用
       this.ws.onclose = function() {
@@ -243,12 +253,14 @@ export default {
     scroll() {
       this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight
     },
+    rush() {
+      window.location.reload()
+    },
     // 连接服务事件
     connectEvent() {},
     // 发送信息
     sendEvent() {
       this.inputValue = this.trim(this.inputValue)
-      console.log(this.inputValue)
       if (this.connectState) {
         this.messageList.push({
           type: 2,
@@ -259,6 +271,8 @@ export default {
             kefuImg: require('../../asset/user.png')
           }
         })
+      } else {
+        console.log('断开了')
       }
       // 向后端推送消息
       let json = {
@@ -290,6 +304,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.rush {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
 .usericon {
   width: 40px;
   height: 40px;
