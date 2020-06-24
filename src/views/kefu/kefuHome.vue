@@ -72,6 +72,7 @@ export default {
   name: 'Connect',
   data() {
     return {
+      //聊天室用户
       customList: [],
       // 当前时间
       localTime: '',
@@ -169,11 +170,9 @@ export default {
               url: that.GLOBAL.baseUrl + '/api/user/selectById?userId=' + that.receive.mFromUserid
             })
             .then((res) => {
-              console.log(res.data.data)
               that.users = res.data.data
               if (that.customList.length != 0) {
                 for (let i = 0; i < that.customList.length; i++) {
-                  console.log(i)
                   if (that.customList[i].customInfo.userId != that.users.userId) {
                     that.bool = true
                   } else {
@@ -194,7 +193,7 @@ export default {
                   })
                 }
               } else {
-                console.log('接入')
+                console.log('接入一个用户')
                 that.customList.push({
                   type: 1,
                   customInfo: {

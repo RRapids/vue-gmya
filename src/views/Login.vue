@@ -19,7 +19,6 @@
         </div>
       </form>
       <div class="otherLogin">
-        <button class="other-btn">手机验证码登录</button>
         <button class="other-btn" @click="goRegister">注册</button>
       </div>
     </div>
@@ -190,12 +189,11 @@ export default {
   margin-top: 400px;
 }
 .logo {
-  width: 50px;
+  width: 100%;
   height: 50px;
   img {
     width: 100px;
     height: 100px;
-    margin-left: 135px;
     margin-top: 120px;
     border-radius: 50%;
     box-shadow: 0px 0px 4px 3px rgba(92, 225, 230, 0.5), 3px 6px 10px 3px rgba(92, 225, 230, 0.2);
