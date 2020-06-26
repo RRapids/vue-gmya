@@ -35,7 +35,10 @@
           {{ localTime }}
         </div>
         <div v-for="(item, index) in messageList" :key="index">
-          <!-- 左侧 -->
+          <!-- 左侧 
+          parseInt(receive.mFromUserid) 将id转为数字
+          
+          -->
           <div class="left" v-if="item.type === 1">
             <img :src="item.userInfo.userImg" class="usericon" />
             <div class="mssageInput">
@@ -82,12 +85,6 @@ export default {
         userName: '',
         userImg: ''
       },
-      // 客服消息
-      kefuInfo: {
-        kefuId: 1,
-        kefuName: 'kufu',
-        kefuImg: ''
-      },
       // 输入框内容
       inputValue: '',
       // 消息列表
@@ -117,9 +114,10 @@ export default {
       ws: undefined,
       user: null,
       mToUserid: null, // 接收人ID
-      receive: null,
+      receive: [],
       liaotian: true,
       users: null,
+      otherUsers: null,
       bool: false
     }
   },
@@ -128,10 +126,6 @@ export default {
     var timestamp = new Date().getTime() //获取当前毫秒时间戳
     var nowdate = new Date(timestamp) / 1000 //把当前日期变成时间戳
     this.localTime = new Date(parseInt(nowdate) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ') //把时间戳转换日期格式
-    // // 获取传来的值
-    // const userData = JSON.parse(sessionStorage.getItem('userstorage'))
-    // this.userInfo = userData.userInfo.customInfo
-    // console.log(this.userInfo.userName)
 
     // 获取客服信息
     this.user = this.$store.state.user
@@ -140,7 +134,6 @@ export default {
     console.log('送信地址：' + this.user.userPath)
     if (this.user != null) {
       let that = this
-
       // WebSocket连接
       this.ws = new WebSocket('ws://121.199.6.2:8080/websocket?' + this.user.id)
       // 连接时被调用
@@ -170,10 +163,16 @@ export default {
               url: that.GLOBAL.baseUrl + '/api/user/selectById?userId=' + that.receive.mFromUserid
             })
             .then((res) => {
-              that.users = res.data.data
+              console.log(res.data.data)
+              /**
+               * 接入客户
+               * 1. 第一个客户
+               * 2. 非第一个客户
+               */
               if (that.customList.length != 0) {
+                that.otherUsers = res.data.data
                 for (let i = 0; i < that.customList.length; i++) {
-                  if (that.customList[i].customInfo.userId != that.users.userId) {
+                  if (that.customList[i].customInfo.userId != that.otherUsers.userId) {
                     that.bool = true
                   } else {
                     console.log('存在')
@@ -182,18 +181,19 @@ export default {
                   }
                 }
                 if (that.bool) {
-                  console.log('接入')
+                  console.log('再接入')
                   that.customList.push({
                     type: 1,
                     customInfo: {
-                      userId: that.users.userId,
-                      userName: that.users.userName,
-                      userImg: that.users.avatar
+                      userId: that.otherUsers.userId,
+                      userName: that.otherUsers.userName,
+                      userImg: that.otherUsers.avatar
                     }
                   })
                 }
               } else {
-                console.log('接入一个用户')
+                console.log('接入第一个用户')
+                that.users = res.data.data
                 that.customList.push({
                   type: 1,
                   customInfo: {
@@ -203,6 +203,7 @@ export default {
                   }
                 })
               }
+              that.userInfo.userId = that.users.userId
               that.userInfo.userImg = that.users.avatar
               that.userInfo.userName = that.users.userName
             })
@@ -210,10 +211,10 @@ export default {
           // 保存对方送信地址
           if (that.receive.userPath == null) {
             that.mToUserid = null
-            console.log(that.mToUserid)
+            console.log('地址1' + that.mToUserid)
           } else {
             that.mToUserid = that.receive.userPath
-            console.log(that.mToUserid)
+            console.log('地址2:' + that.mToUserid)
           }
           that.messageList.push({
             type: 1,
